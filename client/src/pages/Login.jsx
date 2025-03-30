@@ -1,11 +1,87 @@
-import React from 'react'
+import React, { useState } from "react";
+import { assets } from "../assets/assets";
 
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * @function Login
+ * @description A component that renders a login/signup form depending on the state.
+ * @returns {JSX.Element} A JSX element containing the login/signup form.
+ * @example
+ * <Login />
+ */
+/******  a5f39f1b-2d48-49fc-bfb8-740f91ad840c  *******/
 const Login = () => {
+  const [state, setState] = useState("Sign Up");
   return (
-    <div>
-     LOGIN 
-    </div>
-  )
-}
+    <div className="flex flex-col items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-blue-200 to-purple-400">
+      <img
+        src={assets.logo}
+        alt=""
+        className="absolute left-5 sm:left-20 top-5 sm:32 cursor-pointer"
+      />
+      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-96 text-indigo-300 text-sm">
+        <h2 className="text-3xl font-semibold text-white text-center mb-3">
+          {state === "Sign Up" ? "Create account" : "Log in"}
+        </h2>
+        <p className="text-center text-s,m mb-3">
+          {state === "Sign Up"
+            ? "Create your account"
+            : "Login to your account"}
+        </p>
+        <form action="">
+          {state === "Sign Up" && (
+            <div className="mb-4 flex items-center gap-3 w-full  px-5 py-2.5 rounded-full bg-[#333A5C]">
+            <img src={assets.person_icon} alt="" />
+            <input
+              className="outline-none bg-transparent"
+              type="text"
+              placeholder="Full name"
+              required
+            />
+          </div>
+          )}
+          
+          <div className="mb-4 flex items-center gap-3 w-full  px-5 py-2.5 rounded-full bg-[#333A5C]">
+            <img src={assets.mail_icon} alt="" />
+            <input
+              className="outline-none bg-transparent"
+              type="email"
+              placeholder="Email"
+              required
+            />
+          </div>
+          <div className="mb-4 flex items-center gap-3 w-full  px-5 py-2.5 rounded-full bg-[#333A5C]">
+            <img src={assets.lock_icon} alt="" />
+            <input
+              className="outline-none bg-transparent"
+              type="password"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <p className="mb-4 text-indigo-500 cursor-pointer">
+            Forget password?
+          </p>
 
-export default Login
+          <button className="w-full py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-900 text-white font-medium">
+            {state}
+          </button>
+        </form>
+        <p className="text-gray-400 text-center text-xs mt-4 ">
+          Already have an account?{" "}
+          <span className="text-blue-400 cursor-pointer underline">
+            Login here
+          </span>
+        </p>
+        <p className="text-gray-400 text-center text-xs mt-4 ">
+          Don't have an account?{" "}
+          <span className="text-blue-400 cursor-pointer underline">
+            Sign Up
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
