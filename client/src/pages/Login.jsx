@@ -1,20 +1,62 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
-/*************  ✨ Codeium Command ⭐  *************/
-/**
- * @function Login
- * @description A component that renders a login/signup form depending on the state.
- * @returns {JSX.Element} A JSX element containing the login/signup form.
- * @example
- * <Login />
- */
-/******  a5f39f1b-2d48-49fc-bfb8-740f91ad840c  *******/
 const Login = () => {
   const [state, setState] = useState("Sign Up");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+  const { backendUrl, setIsLoggedin, getUserData } = useContext(AppContext);
+
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+
+      axios.defaults.withCredentials = true;
+
+      if (state === "Sign Up") {
+        const { data } = await axios.post(backendUrl + "api/auth/register", {
+          name,
+          email,
+          password,
+        });
+        if (data.success) {
+          alert(data.message);
+          setIsLoggedin(true);
+          getUserData();
+          navigate("/");
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        const { data } = await axios.post(backendUrl + "api/auth/login", {
+          email,
+          password,
+        });
+        if (data.success) {
+          alert(data.message);
+          setIsLoggedin(true);
+          getUserData();
+          navigate("/");
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-blue-200 to-purple-400">
       <img
+        onClick={() => navigate("/")}
         src={assets.logo}
         alt=""
         className="absolute left-5 sm:left-20 top-5 sm:32 cursor-pointer"
@@ -28,22 +70,26 @@ const Login = () => {
             ? "Create your account"
             : "Login to your account"}
         </p>
-        <form action="">
+        <form onSubmit={onSubmitHandler}>
           {state === "Sign Up" && (
             <div className="mb-4 flex items-center gap-3 w-full  px-5 py-2.5 rounded-full bg-[#333A5C]">
-            <img src={assets.person_icon} alt="" />
-            <input
-              className="outline-none bg-transparent"
-              type="text"
-              placeholder="Full name"
-              required
-            />
-          </div>
+              <img src={assets.person_icon} alt="" />
+              <input
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                className="outline-none bg-transparent"
+                type="text"
+                placeholder="Full name"
+                required
+              />
+            </div>
           )}
-          
+
           <div className="mb-4 flex items-center gap-3 w-full  px-5 py-2.5 rounded-full bg-[#333A5C]">
             <img src={assets.mail_icon} alt="" />
             <input
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
               className="outline-none bg-transparent"
               type="email"
               placeholder="Email"
@@ -53,13 +99,18 @@ const Login = () => {
           <div className="mb-4 flex items-center gap-3 w-full  px-5 py-2.5 rounded-full bg-[#333A5C]">
             <img src={assets.lock_icon} alt="" />
             <input
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
               className="outline-none bg-transparent"
               type="password"
               placeholder="Password"
               required
             />
           </div>
-          <p className="mb-4 text-indigo-500 cursor-pointer">
+          <p
+            onClick={() => navigate("/reset-password")}
+            className="mb-4 text-indigo-500 cursor-pointer"
+          >
             Forget password?
           </p>
 
@@ -67,18 +118,27 @@ const Login = () => {
             {state}
           </button>
         </form>
-        <p className="text-gray-400 text-center text-xs mt-4 ">
-          Already have an account?{" "}
-          <span className="text-blue-400 cursor-pointer underline">
-            Login here
-          </span>
-        </p>
-        <p className="text-gray-400 text-center text-xs mt-4 ">
-          Don't have an account?{" "}
-          <span className="text-blue-400 cursor-pointer underline">
-            Sign Up
-          </span>
-        </p>
+        {state === "Sign Up" ? (
+          <p className="text-gray-400 text-center text-xs mt-4 ">
+            Already have an account?{" "}
+            <span
+              onClick={() => setState("Login")}
+              className="text-blue-400 cursor-pointer underline"
+            >
+              Login here
+            </span>
+          </p>
+        ) : (
+          <p className="text-gray-400 text-center text-xs mt-4 ">
+            Don't have an account?{" "}
+            <span
+              onClick={() => setState("Sign Up")}
+              className="text-blue-400 cursor-pointer underline"
+            >
+              Sign Up
+            </span>
+          </p>
+        )}
       </div>
     </div>
   );
