@@ -17,7 +17,7 @@ authRouter.post('/send-verify-otp',userAuth,sendVerifyOtp);
 authRouter.post('/verify-account',userAuth,verifyEmail);
 
 //userAuth middleware is used to check if user is logged in or not
-authRouter.post('/is-auth',userAuth,isAuthenticated);
+authRouter.get('/is-auth',userAuth,isAuthenticated);
 
 //reset password
 authRouter.post('/send-reset-otp',sendResetOtp);
